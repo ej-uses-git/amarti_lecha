@@ -101,7 +101,7 @@ app.listen(8080, () => {
           body:
             "נשלח לך מ: " +
             victim.betterName +
-            "\nאמרתי לך ש:\n\n" +
+            "\n\nאמרתי לך ש:\n" +
             victim.messageContent,
         });
         console.log(message.toJSON());

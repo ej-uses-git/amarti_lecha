@@ -52,7 +52,12 @@ export default async (query: QueryFunction, body: MessagingWebhookBody) => {
       INSERT INTO bet (content, occurs_on, better_id, victim_id)
       VALUES (?, ?, ?, ?)
     `,
-    values: [match.content, match.date, body.AccountSid, victimIdQuery[0]],
+    values: [
+      match.content,
+      match.date,
+      body.AccountSid,
+      victimIdQuery[0].user_id,
+    ],
   });
 
   return ["נשמר בהצלחה! נשלח את ההודעה בתאריך " + match.date];
