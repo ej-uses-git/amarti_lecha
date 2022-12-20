@@ -74,13 +74,17 @@ app.listen(8080, () => {
 
       const todaysVictimsQuery = await query({
         sql: `
-      SELECT u.user_phone AS victimPhone, b.content AS messageContent, me.user_name AS betterName
+      SELECT 
+        u.user_phone AS victimPhone, 
+        b.content AS messageContent, 
+        me.user_name AS betterName,
+        b.bet_id AS betId
       FROM bet AS b
       LEFT JOIN user AS u
       ON u.user_id = b.victim_id
       LEFT JOIN user AS me
       ON me.user_id = b.better_id
-      WHERE b.occurs_on = CURDATE() AND b.sent = false;
+      WHERE b.occurs_on = CURDATE();
     `,
       });
 
@@ -101,10 +105,20 @@ app.listen(8080, () => {
           body:
             "נשלח לך מ: " +
             victim.betterName +
-            "\n\nאמרתי לך ש:\n" +
+            "\n\n*אמרתי לך* ש:\n" +
             victim.messageContent,
         });
         console.log(message.toJSON());
+      });
+
+      todaysVictimsQuery.forEach(async (victim: VictimDetails) => {
+        query({
+          sql: `
+            DELETE FROM bet
+            WHERE bet_id = ? 
+          `,
+          values: [victim.betId],
+        });
       });
     } catch (error) {
       console.log("interval error: ", error);

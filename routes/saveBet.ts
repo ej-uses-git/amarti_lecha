@@ -2,6 +2,7 @@ import splitAmarti from "../utilities/splitAmarti";
 import { QueryFunction } from "../types/makeConnection";
 import { MessagingWebhookBody } from "../types/MessagingRequest";
 import { isRegistered } from "./registerUser";
+import dateGreaterThan from "../utilities/dateGreaterThan";
 
 const joinMessage = process.env.TWILIO_JOIN_MESSAGE || "join birthday-lovely";
 
@@ -10,7 +11,7 @@ export default async (query: QueryFunction, body: MessagingWebhookBody) => {
 
   if (!exists) {
     return [
-      `אי אפשר לשמור את ה"אמרתי לך", כי אתם לא רשומים...`,
+      `אי אפשר לשמור את ה *אמרתי לך*, כי אתם לא רשומים...`,
       `שלחו "הרשמה" כדי להירשם.`,
     ];
   }
@@ -44,8 +45,12 @@ export default async (query: QueryFunction, body: MessagingWebhookBody) => {
     return [
       "לא ניתן לשלוח הודעות למישהו שלא רשום.\nרוצים לשלוח לחברים שלכם הודעה? שירשמו!\nניתן להירשם במספר הזה, לאחר שליחת ההודעה:\n" +
         joinMessage +
-        "\nולאחר מכן שליחת ההודעה\nהרשמה",
+        "\nולאחר מכן שליחת ההודעה:\nהרשמה",
     ];
+
+  const isDateValid = dateGreaterThan(new Date(match.date), new Date());
+  if (!isDateValid)
+    return ["ה *אמרתי לך* לא חוקי - יש לקבוע אותו ליום אחרי היום..."];
 
   await query({
     sql: `
@@ -60,5 +65,5 @@ export default async (query: QueryFunction, body: MessagingWebhookBody) => {
     ],
   });
 
-  return ["נשמר בהצלחה! נשלח את ההודעה בתאריך " + match.date];
+  return ["ה *אמרתי לך* נשמר בהצלחה! נשלח את ההודעה בתאריך " + match.date];
 };
