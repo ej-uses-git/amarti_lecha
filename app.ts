@@ -80,7 +80,7 @@ app.listen(8080, () => {
       ON u.user_id = b.victim_id
       LEFT JOIN user AS me
       ON me.user_id = b.better_id
-      WHERE b.occurs_on = CURDATE();
+      WHERE b.occurs_on = CURDATE() AND b.sent = false;
     `,
       });
 

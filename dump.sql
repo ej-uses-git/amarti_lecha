@@ -28,6 +28,7 @@ CREATE TABLE `bet` (
   `occurs_on` date NOT NULL,
   `better_id` varchar(50) DEFAULT NULL,
   `victim_id` varchar(50) DEFAULT NULL,
+  `sent` tinyint DEFAULT '0',
   PRIMARY KEY (`bet_id`),
   KEY `better_id_fk_idx` (`better_id`),
   KEY `victim_id_fk_idx` (`victim_id`),
@@ -78,4 +79,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-20 23:16:12
+-- Dump completed on 2022-12-20 23:44:24
