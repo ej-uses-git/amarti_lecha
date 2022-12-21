@@ -2,10 +2,13 @@ import { createConnection } from "mysql";
 import { promisify } from "util";
 
 export default () => {
+  const password = process.env.SQL_PASSWORD;
+  if (!password) throw new Error("You are missing a necessary environment variable.");
+
   const con = createConnection({
     host: "localhost",
-    user: "root",
-    password: "hilma",
+    user: process.env.SQL_USER || "root",
+    password,
     database: "amarti_lecha",
   });
 
